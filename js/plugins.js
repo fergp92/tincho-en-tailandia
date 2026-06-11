@@ -6,5 +6,6 @@ var $plugins =
 {"name":"CustomLogo","status":true,"description":"Shows RPG Maker and user logos at the start of the game.","parameters":{"logo1":"","logo1ImageName":"MadeWithMv","logo1Skippable":"true","logo1Coordinate":"","logo1X":"408","logo1Y":"312","logo1Origin":"0.5","logo1Time":"","logo1FadeinFrames":"12","logo1FadeoutFrames":"12","logo1DurationFrames":"120","logo2":"","logo2ImageName":"","logo2Skippable":"true","logo2Coordinate":"","logo2X":"408","logo2Y":"312","logo2Origin":"0.5","logo2Time":"","logo2FadeinFrames":"12","logo2FadeoutFrames":"12","logo2DurationFrames":"120","logo3":"","logo3ImageName":"","logo3Skippable":"true","logo3Coordinate":"","logo3X":"408","logo3Y":"312","logo3Origin":"0.5","logo3Time":"","logo3FadeinFrames":"12","logo3FadeoutFrames":"12","logo3DurationFrames":"120","allowTotalSkip":"true"}},
 {"name":"HideTitle","status":true,"description":"Hides the game title text on the title screen, showing only the background image and command window.","parameters":{}},
 {"name":"TinchoPush","status":true,"description":"Empujon de NPCs por choque + enojo opcional con pelea.","parameters":{}},
-{"name":"TinchoFiesta","status":true,"description":"Modo Pedo + Chamuyo de Mauri (C) + Itinerario de Fede (I).","parameters":{}}
+{"name":"TinchoFiesta","status":true,"description":"Modo Pedo + Chamuyo de Mauri (C) + Itinerario de Fede (I).","parameters":{}},
+{"name":"TinchoCamara","status":true,"description":"Camara de Seba (tecla F): fotos a cosas taggeadas <foto>.","parameters":{}}
 ];
