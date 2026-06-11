@@ -11,6 +11,9 @@
  *               Despues de la pelea (gane o pierda) queda calmado para
  *               siempre (self-switch D) y se deja empujar normal.
  *
+ * Controles: caminar contra el NPC, o tecla E mirandolo de frente.
+ * La primera vez que empujas aparece un hint (switch 22 lo recuerda).
+ *
  * Requiere: Common Event 3 (la escena de enojo; lee el troop de la
  * variable 17) y el SE 'Push'.
  */
@@ -20,6 +23,9 @@
     var ANGER_VAR = 17;      // variable con el troop id del enojado
     var ANGER_CE = 3;        // common event de la pelea
     var ANGER_AT_PUSH = 2;   // se enoja al 2do empujon
+    var HINT_SWITCH = 22;    // ya se mostro el hint de empujar
+
+    Input.keyMapper[69] = 'tpush';   // tecla E = Empujar
 
     function pushData(event) {
         var ev = event.event();
@@ -75,9 +81,19 @@
         return moved;
     };
 
+    function showHintOnce() {
+        if ($gameSwitches.value(HINT_SWITCH)) return;
+        $gameSwitches.setValue(HINT_SWITCH, true);
+        $gameMessage.add("\\c[6]Podes EMPUJAR a la gente: segui");
+        $gameMessage.add("caminando contra ella, o tocá E");
+        $gameMessage.add("mirandola de frente.\\c[0]");
+        $gameMessage.add("(Ojo: no a todos les gusta.)");
+    }
+
     Game_Event.prototype.tpPushed = function(d) {
         var data = pushData(this);
         if (!data) return;
+        showHintOnce();
         this._tpPushCount = (this._tpPushCount || 0) + 1;
         var angry = data.troop > 0 && !this.tpCalmado();
         if (angry && this._tpPushCount >= ANGER_AT_PUSH) {
@@ -109,8 +125,34 @@
         _GP_moveStraight.call(this, d);
     };
 
+    // tecla E: empuja al NPC que tenes adelante
+    function tryPushFront() {
+        if ($gameMap.isEventRunning() || $gameMessage.isBusy()) return false;
+        if (!$gamePlayer.canMove()) return false;
+        var d = $gamePlayer.direction();
+        var x2 = $gameMap.roundXWithDirection($gamePlayer.x, d);
+        var y2 = $gameMap.roundYWithDirection($gamePlayer.y, d);
+        var evs = $gameMap.eventsXyNt(x2, y2).filter(function(e) {
+            return e.tpPushable();
+        });
+        if (evs.length > 0) {
+            evs[0].tpPushed(d);
+            return true;
+        }
+        return false;
+    }
+
+    var _GP_update = Game_Player.prototype.update;
+    Game_Player.prototype.update = function(sceneActive) {
+        _GP_update.call(this, sceneActive);
+        if (sceneActive && Input.isTriggered('tpush')) {
+            tryPushFront();
+        }
+    };
+
     // hook para que el CE pueda correr al enojado tras la pelea
     window.TinchoPush = {
+        tryPushFront: tryPushFront,
         afterFight: function() {
             var ev = $gameTemp.tpAngryEvent;
             if (ev) {
