@@ -85,8 +85,8 @@
     function showHintOnce() {
         if ($gameSwitches.value(HINT_SWITCH)) return;
         $gameSwitches.setValue(HINT_SWITCH, true);
-        $gameMessage.add("\\c[6]Podes EMPUJAR a la gente: toca E");
-        $gameMessage.add("mirandola de frente.\\c[0]");
+        $gameMessage.add("\\c[6]Podés EMPUJAR a la gente: tocá E");
+        $gameMessage.add("mirándola de frente.\\c[0]");
         $gameMessage.add("(Ojo: no a todos les gusta.)");
     }
 

@@ -32,23 +32,23 @@
         "Seba: Clic. Material pal discurso."
     ];
     var LEGEND_LINES = [
-        "Seba: PARA PARA PARA...",
+        "Seba: PARÁ PARÁ PARÁ...",
         "Seba: Esta foto paga el viaje entero."
     ];
     var REPEAT_LINES = [
-        "Seba: Ya la tengo a esa, papa.",
+        "Seba: Ya la tengo a esa, papá.",
         "Seba: Dos veces lo mismo no. Soy artista."
     ];
     var MEH_LINES = [
         "Seba: ...No. Eso no es contenido.",
-        "Seba: ¿Que le ves? Busca algo con onda."
+        "Seba: ¿Qué le ves? Buscá algo con onda."
     ];
     var SELFIE_LINES = [
         "Seba: ¿Selfie? Las selfies no cuentan,",
         "son para el grupo de WhatsApp."
     ];
-    var AUTHORITY_LINE = "Seba: Guarda ESO. ¿Queres que nos deporten?";
-    var SEBA_LINE = "Seba: A mi no. Yo SACO las fotos.";
+    var AUTHORITY_LINE = "Seba: Guardá ESO. ¿Querés que nos deporten?";
+    var SEBA_LINE = "Seba: A mí no. Yo SACO las fotos.";
 
     function pick(arr) {
         return arr[Math.floor(Math.random() * arr.length)];
@@ -87,9 +87,9 @@
     function showHintOnce() {
         if ($gameSwitches.value(HINT_SWITCH)) return false;
         $gameSwitches.setValue(HINT_SWITCH, true);
-        $gameMessage.add("\\c[6]Seba trajo la camara: toca F y le");
+        $gameMessage.add("\\c[6]Seba trajo la cámara: tocá F y le");
         $gameMessage.add("saca una foto a lo que tengas adelante");
-        $gameMessage.add("(hasta 3 pasos).\\c[0] Lo fotogenico suma");
+        $gameMessage.add("(hasta 3 pasos).\\c[0] Lo fotogénico suma");
         $gameMessage.add("\\c[6]Fotos de Seba\\c[0]. Hay LEGENDARIAS.");
         return true;
     }
@@ -130,7 +130,7 @@
                 $gameTemp._tfotoSelfieDicho = true;
                 SELFIE_LINES.forEach(function(l) { $gameMessage.add(l); });
             } else if (Math.random() < 0.2) {
-                $gameMessage.add("Seba: Otra selfie no. Buscame CONTENIDO.");
+                $gameMessage.add("Seba: Otra selfie no. Buscáme CONTENIDO.");
             }
             return true;
         }

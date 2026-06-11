@@ -7,5 +7,6 @@ var $plugins =
 {"name":"HideTitle","status":true,"description":"Hides the game title text on the title screen, showing only the background image and command window.","parameters":{}},
 {"name":"TinchoPush","status":true,"description":"Empujon de NPCs por choque + enojo opcional con pelea.","parameters":{}},
 {"name":"TinchoFiesta","status":true,"description":"Modo Pedo + Chamuyo de Mauri (C) + Itinerario de Fede (I).","parameters":{}},
-{"name":"TinchoCamara","status":true,"description":"Camara de Seba (tecla F): fotos a cosas taggeadas <foto>.","parameters":{}}
+{"name":"TinchoCamara","status":true,"description":"Camara de Seba (tecla F): fotos a cosas taggeadas <foto>.","parameters":{}},
+{"name":"TinchoHud","status":true,"description":"Barra de Pedo visual + pantalla roja atada a la variable.","parameters":{}}
 ];

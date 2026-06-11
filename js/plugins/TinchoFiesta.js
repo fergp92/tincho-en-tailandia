@@ -265,7 +265,7 @@
         }
         L.push("");
         L.push("\\c[2][!]\\c[0] NO PERDER A MAURI");
-        nota("estado: en revision permanente");
+        nota("estado: en revisión permanente");
         L.push("\\c[7]Pedo " + pedo() + "% | Amigos " +
                $gameVariables.value(AMIGOS_VAR) + " | Fotos " +
                $gameVariables.value(3) + "\\c[0]");
