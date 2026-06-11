@@ -11,7 +11,8 @@
  *               Despues de la pelea (gane o pierda) queda calmado para
  *               siempre (self-switch D) y se deja empujar normal.
  *
- * Controles: caminar contra el NPC, o tecla E mirandolo de frente.
+ * Controles: tecla E mirando al NPC de frente (solo E; el empuje por
+ * choque al caminar se elimino a pedido de Fer).
  * La primera vez que empujas aparece un hint (switch 22 lo recuerda).
  *
  * Requiere: Common Event 3 (la escena de enojo; lee el troop de la
@@ -84,8 +85,7 @@
     function showHintOnce() {
         if ($gameSwitches.value(HINT_SWITCH)) return;
         $gameSwitches.setValue(HINT_SWITCH, true);
-        $gameMessage.add("\\c[6]Podes EMPUJAR a la gente: segui");
-        $gameMessage.add("caminando contra ella, o tocá E");
+        $gameMessage.add("\\c[6]Podes EMPUJAR a la gente: toca E");
         $gameMessage.add("mirandola de frente.\\c[0]");
         $gameMessage.add("(Ojo: no a todos les gusta.)");
     }
@@ -109,23 +109,8 @@
         this.tpShove(d);
     };
 
-    var _GP_moveStraight = Game_Player.prototype.moveStraight;
-    Game_Player.prototype.moveStraight = function(d) {
-        if (!this.canPass(this.x, this.y, d) &&
-            !$gameMap.isEventRunning() && !$gameMessage.isBusy()) {
-            var x2 = $gameMap.roundXWithDirection(this.x, d);
-            var y2 = $gameMap.roundYWithDirection(this.y, d);
-            var evs = $gameMap.eventsXyNt(x2, y2).filter(function(e) {
-                return e.tpPushable();
-            });
-            if (evs.length > 0) {
-                evs[0].tpPushed(d);
-            }
-        }
-        _GP_moveStraight.call(this, d);
-    };
-
-    // tecla E: empuja al NPC que tenes adelante
+    // tecla E: empuja al NPC que tenes adelante (UNICO modo de empujar;
+    // el empuje por choque se saco a pedido de Fer 2026-06-11)
     function tryPushFront() {
         if ($gameMap.isEventRunning() || $gameMessage.isBusy()) return false;
         if (!$gamePlayer.canMove()) return false;
