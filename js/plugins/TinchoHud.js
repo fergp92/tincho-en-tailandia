@@ -37,6 +37,8 @@
     }
 
     //--------------------------------------------------------------- gauge
+    // Botella de Chang que se llena con el Pedo: la botella gris (vacia)
+    // de fondo y la version a color revelandose de ABAJO hacia arriba.
     function Sprite_PedoGauge() {
         this.initialize.apply(this, arguments);
     }
@@ -45,11 +47,13 @@
 
     Sprite_PedoGauge.prototype.initialize = function() {
         Sprite.prototype.initialize.call(this);
-        this.bitmap = new Bitmap(210, 40);
-        this.x = 10;
-        this.y = 8;
+        this.bitmap = new Bitmap(96, 150);
+        this.x = 8;
+        this.y = 6;
         this._lastValue = -1;
         this._pulse = 0;
+        this._empty = ImageManager.loadBitmap('img/system/', 'chang_empty', 0, true);
+        this._full = ImageManager.loadBitmap('img/system/', 'chang_full', 0, true);
     };
 
     Sprite_PedoGauge.prototype.update = function() {
@@ -58,8 +62,9 @@
         this.visible = $gameSwitches.value(HUD_SWITCH) &&
                        !$gameMessage.isBusy();
         if (!this.visible) return;
+        if (!this._empty.isReady() || !this._full.isReady()) return;
         this._pulse++;
-        if (v !== this._lastValue || (v >= 80 && this._pulse % 8 === 0)) {
+        if (v !== this._lastValue || (v >= 80 && this._pulse % 10 === 0)) {
             this._lastValue = v;
             this.redraw(v);
         }
@@ -68,32 +73,34 @@
     Sprite_PedoGauge.prototype.redraw = function(v) {
         var b = this.bitmap;
         b.clear();
-        var gx = 0, gy = 14, gw = 170, gh = 16;
+        var bw = this._full.width;
+        var bh = this._full.height;
+        var bx = 4, by = 16;
         // etiqueta
-        b.fontSize = 14;
+        b.fontSize = 13;
         b.textColor = '#ffffff';
         b.outlineColor = '#000000';
         b.outlineWidth = 4;
-        b.drawText('PEDO', gx, 0, 60, 14, 'left');
-        // marco
-        b.fillRect(gx, gy, gw, gh, 'rgba(0,0,0,0.65)');
-        b.fillRect(gx + 1, gy + 1, gw - 2, gh - 2, 'rgba(30,30,30,0.9)');
-        // relleno
-        var fill = Math.round((gw - 4) * v / 100);
-        if (fill > 0) {
-            var c = levelColor(v);
-            var glow = (v >= 80 && this._pulse % 16 < 8) ? '#ff7070' : c;
-            b.gradientFillRect(gx + 2, gy + 2, fill, gh - 4, c, glow, false);
+        b.drawText('PEDO', 0, 0, 60, 13, 'left');
+        // botella vacia (gris)
+        b.blt(this._empty, 0, 0, bw, bh, bx, by);
+        // relleno: la parte de abajo de la botella a color, segun el %
+        var fillH = Math.round(bh * v / 100);
+        if (fillH > 0) {
+            var blink = v >= 80 && this._pulse % 20 < 10;
+            b.paintOpacity = blink ? 200 : 255;
+            b.blt(this._full, 0, bh - fillH, bw, fillH, bx, by + bh - fillH);
+            b.paintOpacity = 255;
         }
-        // marcas de umbral (40 stumble, 60 carcel, 80 blackout)
+        // marcas de umbral (40 tropiezos, 60 carcel, 80 blackout)
         [40, 60, 80].forEach(function(t) {
-            var tx = gx + 2 + Math.round((gw - 4) * t / 100);
-            b.fillRect(tx, gy + 1, 1, gh - 2, 'rgba(255,255,255,0.45)');
+            var ty = by + bh - Math.round(bh * t / 100);
+            b.fillRect(bx + bw + 2, ty, 6, 1, 'rgba(255,255,255,0.8)');
         });
-        // porcentaje
+        // porcentaje al costado
         b.fontSize = 14;
         b.textColor = levelColor(v);
-        b.drawText(v + '%', gx + gw + 6, gy, 40, gh, 'left');
+        b.drawText(v + '%', bx + bw + 10, by + bh - 20, 50, 16, 'left');
     };
 
     //------------------------------------------------------------- overlay
