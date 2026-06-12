@@ -8,5 +8,6 @@ var $plugins =
 {"name":"TinchoPush","status":true,"description":"Empujon de NPCs por choque + enojo opcional con pelea.","parameters":{}},
 {"name":"TinchoFiesta","status":true,"description":"Modo Pedo + Chamuyo de Mauri (C) + Itinerario de Fede (I).","parameters":{}},
 {"name":"TinchoCamara","status":true,"description":"Camara de Seba (tecla F): fotos a cosas taggeadas <foto>.","parameters":{}},
-{"name":"TinchoHud","status":true,"description":"Barra de Pedo visual + pantalla roja atada a la variable.","parameters":{}}
+{"name":"TinchoHud","status":true,"description":"Barra de Pedo visual + pantalla roja atada a la variable.","parameters":{}},
+{"name":"TinchoGuard","status":true,"description":"Eventos huerfanos de saves viejos se desactivan en vez de crashear.","parameters":{}}
 ];
