@@ -146,6 +146,22 @@
         };
     }
 
+    // La ladyboy fantasma vive como clase propia que carga sus datos de
+    // evento consigo misma. Antes se inyectaba en $dataMap.events y el save
+    // serializaba un Game_Event sin respaldo en el JSON del mapa: al cargar,
+    // event() devolvia undefined y hablarle (o la tecla F cerca) tiraba
+    // "Cannot read property 'pages' of undefined". Con la clase global,
+    // JsonEx restaura el prototipo al cargar y event() sigue funcionando.
+    function Game_TinchoLB() { this.initialize.apply(this, arguments); }
+    Game_TinchoLB.prototype = Object.create(Game_Event.prototype);
+    Game_TinchoLB.prototype.constructor = Game_TinchoLB;
+    Game_TinchoLB.prototype.initialize = function(mapId, eventId, data) {
+        this._tpData = data;
+        Game_Event.prototype.initialize.call(this, mapId, eventId);
+    };
+    Game_TinchoLB.prototype.event = function() { return this._tpData; };
+    window.Game_TinchoLB = Game_TinchoLB;
+
     function spawnLadyboyNearby() {
         try {
             var spots = [[1, 0], [-1, 0], [0, 1], [0, -1]].map(function(o) {
@@ -156,10 +172,10 @@
             });
             if (!spots.length) return;
             var s = spots[Math.floor(Math.random() * spots.length)];
-            var id = $dataMap.events.length;
+            var id = Math.max($gameMap._events.length, $dataMap.events.length);
             var lines = LB_LINES[Math.floor(Math.random() * LB_LINES.length)];
-            $dataMap.events[id] = ladyboyEventData(id, s[0], s[1], lines);
-            var ev = new Game_Event($gameMap._mapId, id);
+            var ev = new Game_TinchoLB($gameMap._mapId, id,
+                                       ladyboyEventData(id, s[0], s[1], lines));
             $gameMap._events[id] = ev;
             ev.requestBalloon(4); // corazon
             var scene = SceneManager._scene;
