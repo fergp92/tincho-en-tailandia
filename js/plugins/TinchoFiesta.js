@@ -254,6 +254,26 @@
     //=========================================================================
     // 3) TECLA I — itinerario de Fede
     //=========================================================================
+    function siguientePaso() {
+        if (!$gameSwitches.value(6)) {                    // capitulo 1
+            var m = $gameMap.mapId();
+            if (m === 1) {
+                return $gameSwitches.value(25) ?
+                    "encontrar el pasaporte de Tincho" :
+                    "check-in, seguridad y al embarque";
+            }
+            if (m === 3) return "pasar migraciones (sonreí)";
+            if (m === 4) return "regatear el taxi a la ciudad";
+            if ($gameSwitches.value(28)) return "buscar a Fede en la calle de Khao San";
+            if (m === 14 || m === 9 || m === 15) return "probar el Bar y el Casino";
+            return "KHAO SAN ROAD (barrera este de la ciudad)";
+        }
+        if (!$gameSwitches.value(18)) return "seguir a Fer: alitas en Soi 6";
+        if (!$gameSwitches.value(21)) return "al muelle: ferry a la Full Moon";
+        if (!$gameSwitches.value(20)) return "FULL MOON PARTY (no perder a Mauri)";
+        return "la boda. Con la frente en alto.";
+    }
+
     function itinerarioLines() {
         var L = [];
         var done = function(t) { L.push("\\c[3][x]\\c[0] " + t); };
@@ -261,6 +281,7 @@
         var nota = function(t) { L.push("\\c[7]    " + t + "\\c[0]"); };
         L.push("\\c[14]=== ITINERARIO OFICIAL ===\\c[0]");
         L.push("\\c[14](carpeta de Fede, no tocar)\\c[0]");
+        L.push("\\c[2]>> SIGUIENTE:\\c[0] " + siguientePaso());
         L.push("");
         if (!$gameSwitches.value(6)) {
             done("Sobrevivir Ezeiza");
@@ -340,6 +361,7 @@
     window.TinchoFiesta = {
         tryChamuyo: tryChamuyo,
         toggleItinerario: toggleItinerario,
-        spawnLadyboyNearby: spawnLadyboyNearby
+        spawnLadyboyNearby: spawnLadyboyNearby,
+        siguientePaso: siguientePaso
     };
 })();
