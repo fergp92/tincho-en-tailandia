@@ -195,8 +195,8 @@
     function pushNote(event) {
         var ev = event.event();
         if (!ev || !ev.note) return null;
-        var m = ev.note.match(/<push(?::(\d+))?>/i);
-        return m ? { troop: m[1] ? Number(m[1]) : 0 } : null;
+        var m = ev.note.match(/<push(?::(\d+))?(?::(poli))?>/i);
+        return m ? { troop: m[1] ? Number(m[1]) : 0, poli: !!m[2] } : null;
     }
 
     function tryChamuyo() {

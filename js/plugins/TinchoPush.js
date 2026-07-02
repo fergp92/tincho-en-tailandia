@@ -5,11 +5,13 @@
  * @plugindesc Empujon de NPCs por choque + enojo opcional con pelea.
  * @help
  * Tags en la NOTA del evento:
- *   <push>      El NPC se puede empujar (1 tile en la direccion del choque).
- *               Si no hay lugar atras, se corre a un costado (anti-bloqueo).
- *   <push:N>    Igual, pero al SEGUNDO empujon se enoja y pelea (troop N).
- *               Despues de la pelea (gane o pierda) queda calmado para
- *               siempre (self-switch D) y se deja empujar normal.
+ *   <push>        El NPC se puede empujar (1 tile en la direccion del choque).
+ *                 Si no hay lugar atras, se corre a un costado (anti-bloqueo).
+ *   <push:N>      Igual, pero al SEGUNDO empujon se enoja y pelea (troop N).
+ *                 Despues de la pelea (gane o pierda) queda calmado para
+ *                 siempre (self-switch D) y se deja empujar normal.
+ *   <push:N:poli> POLICIA: se enoja al PRIMER empujon y trata de DETENERTE
+ *                 (Common Event 8: perder = esposado + coima + Dignidad).
  *
  * Controles: tecla E mirando al NPC de frente (solo E; el empuje por
  * choque al caminar se elimino a pedido de Fer).
@@ -23,6 +25,7 @@
 
     var ANGER_VAR = 17;      // variable con el troop id del enojado
     var ANGER_CE = 3;        // common event de la pelea
+    var ARREST_CE = 8;       // common event del arresto (policias)
     var ANGER_AT_PUSH = 2;   // se enoja al 2do empujon
     var HINT_SWITCH = 22;    // ya se mostro el hint de empujar
 
@@ -31,9 +34,9 @@
     function pushData(event) {
         var ev = event.event();
         if (!ev || !ev.note) return null;
-        var m = ev.note.match(/<push(?::(\d+))?>/i);
+        var m = ev.note.match(/<push(?::(\d+))?(?::(poli))?>/i);
         if (!m) return null;
-        return { troop: m[1] ? Number(m[1]) : 0 };
+        return { troop: m[1] ? Number(m[1]) : 0, poli: !!m[2] };
     }
 
     Game_Event.prototype.tpPushable = function() {
@@ -96,14 +99,15 @@
         showHintOnce();
         this._tpPushCount = (this._tpPushCount || 0) + 1;
         var angry = data.troop > 0 && !this.tpCalmado();
-        if (angry && this._tpPushCount >= ANGER_AT_PUSH) {
-            // se pudrio: pelea
+        var need = data.poli ? 1 : ANGER_AT_PUSH;   // al poli no lo empujas 2 veces
+        if (angry && this._tpPushCount >= need) {
+            // se pudrio: pelea (o arresto si es poli)
             $gameSelfSwitches.setValue([this._mapId, this._eventId, 'D'], true);
             $gameVariables.setValue(ANGER_VAR, data.troop);
             $gameTemp.tpAngryEvent = this;
             this.requestBalloon(5); // furia
             this.turnTowardPlayer();
-            $gameTemp.reserveCommonEvent(ANGER_CE);
+            $gameTemp.reserveCommonEvent(data.poli ? ARREST_CE : ANGER_CE);
             return;
         }
         this.tpShove(d);
